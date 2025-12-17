@@ -87,17 +87,28 @@
     });
   }
 
-  function geocodeRegeoAsync(lng, lat) {
-    return new Promise((resolve, reject) => {
-      geocoder.getAddress([lng, lat], (status, result) => {
-        if (status !== "complete" || !result || !result.regeocode) {
-          reject({ status, result });
-          return;
-        }
+function geocodeRegeoAsync(lng, lat, accuracy) {
+  return new Promise((resolve, reject) => {
+    geocoder.getAddress([lng, lat], (status, result) => {
+      if (status === "complete" && result && result.regeocode) {
         resolve(result.regeocode);
-      });
+        return;
+      }
+
+      if (status === "no_data") {
+        reject({
+          status,
+          result,
+          hint: "高德逆地理无数据：常见原因是定位点在境外/海上，或当前定位精度很差。",
+          coords: { lng, lat, accuracy_m: accuracy }
+        });
+        return;
+      }
+
+      reject({ status, result, coords: { lng, lat, accuracy_m: accuracy } });
     });
-  }
+  });
+}
 
   function pickAddressFields(regeocode) {
     const ac = regeocode.addressComponent || {};
@@ -160,7 +171,7 @@
 
     statusText.textContent = "解析地址中...";
     addrBox.textContent = "逆地理编码中...";
-    const regeocode = await geocodeRegeoAsync(lng, lat);
+    const regeocode = await geocodeRegeoAsync(lng, lat, accuracy);
     addrBox.textContent = fmt(pickAddressFields(regeocode));
 
     statusText.textContent = "完成";
