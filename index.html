@@ -1,1 +1,51 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>定位展示（高德·纯静态·自动定位）</title>
+  <link rel="stylesheet" href="./assets/css/style.css" />
+</head>
 
+<body>
+  <header class="container">
+    <h1>定位展示（高德·纯静态·自动定位）</h1>
+    <p class="muted">
+      页面打开后自动尝试定位；若浏览器策略未触发弹窗或失败，可点击“重新获取定位”（用户手势触发更稳定）。
+    </p>
+    <p class="muted small">
+      提示：定位通常需要 HTTPS（localhost 例外）。建议在系统设置中开启定位服务并连接 Wi‑Fi 以提高精度。
+    </p>
+  </header>
+
+  <main class="container">
+    <section class="actions">
+      <button id="btnLocate">重新获取定位</button>
+      <span class="muted small" id="statusText"></span>
+    </section>
+
+    <section class="grid">
+      <div class="card">
+        <h2>定位与精度</h2>
+        <pre id="posBox">等待定位权限...</pre>
+      </div>
+
+      <div class="card">
+        <h2>地址信息（省市区 / 门牌 / POI）</h2>
+        <pre id="addrBox">未解析</pre>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>地图</h2>
+      <div id="map"></div>
+    </section>
+  </main>
+
+  <!-- 1) 先加载高德 Maps 主库（不在这里加载插件，插件由 AMap.plugin 显式加载） -->
+  <script src="https://webapi.amap.com/maps?v=2.0&key=9a06fdbc92610d609fee9947fb89609f"></script>
+
+  <!-- 2) 再加载你的业务代码 -->
+  <script src="./assets/js/app.js"></script>
+</body>
+</html>
